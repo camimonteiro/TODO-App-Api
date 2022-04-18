@@ -1,7 +1,11 @@
 const express = require('express'); //importando o express
 const app = express(); //instanciando
-const port = 3000;
+const port = 3000; //porta do servidor
 
+// body-parser - middleware - "pacote" que permite que você edite o body
+app.use(express.json())
+
+// importação dos módulos criados
 const task = require('./controller/task');
 const user = require('./controller/user');
 
