@@ -20,17 +20,47 @@ const user = (app) => {
         bd.user.push(newUser)
         console.log(bd.user)
         resp.json({
-          'NewUser': newUser,
-          'erro': false
+          'NewUser': newUser
         })
       } catch (error) {
           resp.json({
-            'message': error,
-            'erro': true
+            'message': error
           })
         }
     })
       
+    // para filtrar pelos parâmetros (/user/:name/:....)
+    app.get('/user/:name/:lastName/:age/:email', function (req, resp) {
+      resp.json({"name": req.params.name,
+        "lastName": req.params.lastName,
+        "age": req.params.age,
+        "email": req.params.email
+      })
+    })
+
+    app.post('/user/:name/:lastName/:age/:email', function (req, resp) {
+      const name = req.params.name;
+      const lastName = req.params.lastName;
+      const age = req.params.age;
+      const email = req.params.email;
+      bd.user.push(req.params)
+      resp.send(`O nome do usuário é ${name} ${lastName}. O usuário tem ${age} anos e seu e-mail é ${email}`)
+    })
+
+    // verbo delete - para excluir dados do banco de dados
+    app.delete('/user/:name/:lastName', function (req, resp) {
+      const nameParams = req.params.name;
+      const lastNameParams = req.params.lastName;
+      const indexUser = bd.user.findIndex(user => user.name == nameParams && user.lastName == lastNameParams);
+
+      if(indexUser > -1){
+        const userDeleted = bd.user.splice(indexUser, 1)
+        resp.json({'User': userDeleted})
+      } else { 
+        resp.json('User not find')
+      }
+
+    })
 }
 
 module.exports = user;

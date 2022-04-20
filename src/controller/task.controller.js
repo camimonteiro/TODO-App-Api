@@ -18,13 +18,11 @@ const task = (app) => {
         console.log(bd.task)
         
         resp.json({
-          'NewTask': newTask,
-          'erro': false
+          'NewTask': newTask
         })
       } catch (error) {
           resp.json({
-            'message': error,
-            'erro': true
+            'message': error
           })
         }
     })
