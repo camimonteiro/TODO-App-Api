@@ -4,7 +4,7 @@ const User = require ('../model/user.model');
 const user = (app) => {
     app.get('/user', function(req, resp) {
       // resp.send('Here user values are read - GET!')
-      resp.json({'user': bd.user})
+      resp.json({'Users': bd.user})
     })
     
     app.post('/user', function(req, resp) {
@@ -55,11 +55,39 @@ const user = (app) => {
 
       if(indexUser > -1){
         const userDeleted = bd.user.splice(indexUser, 1)
-        resp.json({'User': userDeleted})
+        resp.json({'UserDeleted': userDeleted})
       } else { 
         resp.json('User not find')
       }
 
+    })
+    
+    // Método de Update - atualização dos dados do banco
+    app.put('/user/:name/:lastName', function (req, resp) {
+      const nameParams = req.params.name;
+      const lastNameParams = req.params.lastName;
+      const body = req.body;
+      const indexUser = bd.user.findIndex(user => user.name == nameParams && user.lastName == lastNameParams);
+
+      if(indexUser > -1){
+        const oldUserData = bd.user[indexUser];
+        const newUserData = new User(
+          body.name || oldUserData.name,
+          body.lastName || oldUserData.lastName,
+          body.age || oldUserData.age,
+          body.email || oldUserData.email,
+          body.password || oldUserData.password,
+          oldUserData.id
+          );
+        const change = bd.user.splice(indexUser, 1, newUserData);
+
+        resp.json({
+          'UserChanged': newUserData,
+          'UserDeleted': change
+        })
+      } else { 
+        resp.json('User not find')
+      }
     })
 }
 
