@@ -3,9 +3,9 @@
     "start": "nodemon ./src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-
   "dependencies": {
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "sqlite3": "^5.0.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
