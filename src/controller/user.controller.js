@@ -1,6 +1,5 @@
-// const res = require('express/lib/response');
-// const bd = require('../infra/sqlite-db');
-// const User = require ('../model/user.model');
+const bd = require('../infra/sqlite-db');
+const User = require ('../model/user.model');
 
 const user = (app, bd) => {
     app.get('/user', function(req, resp) {
@@ -24,10 +23,13 @@ const user = (app, bd) => {
       try {
         const body = req.body
         const newUser = new User(body.name, body.lastName, body.age, body.email, body.password)
-        bd.user.push(newUser)
-        console.log(bd.user)
-        resp.json({
-          'NewUser': newUser
+        bd.run(`INSERT INTO USERS (NAME, LASTNAME, AGE, EMAIL, PASSWORD) VALUES (?,?,?,?,?)`,
+        [newUser.name, newUser.lastName, newUser.age, newUser.email, newUser.password],(error) => {
+          if (error) {
+            resp.json(error)
+          } else {
+            resp.json('DEU CERTO INSERIR')
+          }
         })
       } catch (error) {
           resp.json({
