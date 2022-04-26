@@ -14,7 +14,7 @@ const userModel = require('./model/user.model');
 const taskModel = require('./model/task.model');
 
 // importação do banco de dados criado
-const bd = require('./infra/bd');
+const bd = require('./infra/sqlite-db');
 
 taskController(app, bd);
 userController(app, bd);

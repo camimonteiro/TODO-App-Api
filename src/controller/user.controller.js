@@ -1,10 +1,17 @@
-const bd = require('../infra/bd');
-const User = require ('../model/user.model');
+// const res = require('express/lib/response');
+// const bd = require('../infra/sqlite-db');
+// const User = require ('../model/user.model');
 
-const user = (app) => {
+const user = (app, bd) => {
     app.get('/user', function(req, resp) {
-      // resp.send('Here user values are read - GET!')
-      resp.json({'Users': bd.user})
+      bd.all('SELECT * FROM USERS', (error, rows)=>{
+        if (error) {
+          resp.json('ERROR SELECTING DATABASE')
+        } else {
+          resp.json({'AVAILABLE USER DATABASE': rows})
+        }
+      })
+
     })
     
     app.post('/user', function(req, resp) {
