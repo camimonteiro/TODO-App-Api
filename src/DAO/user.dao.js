@@ -15,6 +15,18 @@ class UserDAO {
         })
     }
 
+    listUsersID(id) {
+        return new Promise ((resolve, reject) => {
+            this.bd.all (`SELECT * FROM USERS WHERE ID=${id}`, (error, results) => {
+                if (error) {
+                    reject (error)
+                } else {
+                    resolve (results)
+                }
+            })
+        })
+    }
+
     insertUsers(dataNewUsers) {
         return new Promise((resolve, reject) => {
             this.bd.run(`INSERT INTO USERS (NAME, LASTNAME, AGE, EMAIL, PASSWORD) VALUES (?,?,?,?,?)`,
@@ -26,15 +38,33 @@ class UserDAO {
                         resolve('DEU CERTO INSERIR')
                     }
                 })
+            })
+    }
+
+    deleteUsers(id) {
+        return new Promise ((resolve, reject) => {
+            this.bd.run(`DELETE FROM USERS WHERE ID=${id}`, (error) => {
+                if (error) {
+                    reject (error)
+                } else {
+                    resolve ('User deleted!')
+                }
+            })
         })
     }
 
-    deleteUsers() {
-
-    }
-
-    changeUsers() {
-
+    changeUsers(parametros) {
+        return new Promise ((resolve, reject) => {
+            console.log(parametros)
+            this.bd.run(`UPDATE USERS SET NAME = ?, LASTNAME = ?, AGE = ?, EMAIL = ?, PASSWORD = ? WHERE ID = ?`, parametros, (error) => {
+                if (error) {
+                    console.log(error)
+                    reject (error)
+                } else {
+                    resolve ('Update done!')
+                }
+            })
+        })
     }
 }
 
