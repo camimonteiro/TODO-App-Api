@@ -17,14 +17,14 @@ describe('ApiUrl', () => {
     })
 
     test('Testing users route', () => {
-        return request (ApiUrl).put('/user/:name/:lastName')
+        return request (ApiUrl).put('/user/:id')
         .then((response)=> {
             expect(response.statusCode).toBe(200)
         })
     })
 
     test('Testing users route', () => {
-        return request (ApiUrl).delete('/user/:name/:lastName')
+        return request (ApiUrl).delete('/user/:id')
         .then((response)=> {
             expect(response.statusCode).toBe(200)
         })
