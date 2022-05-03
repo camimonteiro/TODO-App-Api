@@ -1,9 +1,11 @@
 const express = require('express'); //importando o express
+const cors = require('cors'); // importando o cors
 const app = express(); //instanciando
-const port = 3000; //porta do servidor
+const port = process.env.PORT || 3000; //porta do servidor
 
 // body-parser - middleware - "pacote" que permite que você edite o body
 app.use(express.json())
+app.use(cors());
 
 // importação dos controllers criados (User e Task Controller)
 const taskController = require('./controller/task.controller');
@@ -18,6 +20,14 @@ const bd = require('./infra/sqlite-db');
 
 taskController(app, bd);
 userController(app, bd);
+
+// código pra colar no navegador
+// fetch("http://localhost:3000/user")
+//     .then((response) => {
+//       return response.json()
+//     }).then((data) => {
+//       console.log(data)
+//     })
 
 //rodar servidor na porta indicada
 app.listen(port, function() {

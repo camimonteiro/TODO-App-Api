@@ -1,42 +1,29 @@
 const bd = require('../infra/sqlite-db');
 const User = require ('../model/user.model');
+const UserDAO = require ('../DAO/user.dao');
 
 const user = (app, bd) => {
-    app.get('/user', function(req, resp) {
-      bd.all('SELECT * FROM USERS', (error, rows)=>{
-        if (error) {
-          resp.json('ERROR SELECTING DATABASE')
-        } else {
-          resp.json({'AVAILABLE USER DATABASE': rows})
-        }
-      })
-
-    })
+  const InstUserDAO = new UserDAO (bd) // instanciando o UserDAO
     
-    app.post('/user', function(req, resp) {
-      // A resposta pode ser feita reservando uma variável e depois chamando ela no campo de resposta.
-      // let name = req.body.name;
-      // let lastName = req.body.lastName;
-      // let age = req.body.age;
-      // let email = req.body.email;
-      // resp.send('Nome: ' + name + '<br>Sobrenome: ' + lastName + '<br>Idade: ' + age + ' anos' + '<br>E-mail: ' + email)
-      try {
-        const body = req.body
-        const newUser = new User(body.name, body.lastName, body.age, body.email, body.password)
-        bd.run(`INSERT INTO USERS (NAME, LASTNAME, AGE, EMAIL, PASSWORD) VALUES (?,?,?,?,?)`,
-        [newUser.name, newUser.lastName, newUser.age, newUser.email, newUser.password],(error) => {
-          if (error) {
-            resp.json(error)
-          } else {
-            resp.json('DEU CERTO INSERIR')
-          }
-        })
-      } catch (error) {
-          resp.json({
-            'message': error
-          })
-        }
+  app.get('/user', function(req, resp) {
+    InstUserDAO.listUsers()
+    .then((answer)=>{
+      resp.status(200).json(answer)
+    }).catch((error)=>{
+      resp.json(error)
     })
+  })
+    
+  app.post('/user', function(req, resp) {
+    const body = req.body;
+    const newUser = new User(body.name, body.lastName, body.age, body.email, body.password);
+    InstUserDAO.insertUsers(newUser)
+    .then((answer)=>{
+      resp.status(200).json(answer)
+    }).catch((error)=>{
+      resp.json(error)
+    })
+  })
       
     // para filtrar pelos parâmetros (/user/:name/:....)
     app.get('/user/:name/:lastName/:age/:email', function (req, resp) {
@@ -64,7 +51,7 @@ const user = (app, bd) => {
 
       if(indexUser > -1){
         const userDeleted = bd.user.splice(indexUser, 1)
-        resp.json({'UserDeleted': userDeleted})
+        resp.status(200).json({'UserDeleted': userDeleted})
       } else { 
         resp.json('User not find')
       }
@@ -90,7 +77,7 @@ const user = (app, bd) => {
           );
         const change = bd.user.splice(indexUser, 1, newUserData);
 
-        resp.json({
+        resp.status(200).json({
           'UserChanged': newUserData,
           'UserDeleted': change
         })
