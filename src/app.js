@@ -7,6 +7,18 @@ const port = process.env.PORT || 3000; //porta do servidor
 app.use(express.json())
 app.use(cors());
 
+app.post('/user', function (req, resp, next) {
+  resp.json({msg: 'This is CORS-enabled for all origins!'})
+})
+
+app.put('/user/:id', function (req, resp, next) {
+  resp.json({msg: 'This is CORS-enabled for all origins!'})
+})
+
+app.delete('/user/:id', function (req, resp, next) {
+  resp.json({msg: 'This is CORS-enabled for all origins!'})
+})
+
 // importação dos controllers criados (User e Task Controller)
 const taskController = require('./controller/task.controller');
 const userController = require('./controller/user.controller');
